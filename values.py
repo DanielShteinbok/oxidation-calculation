@@ -1,7 +1,8 @@
-from sympy import symbols
+#from sympy import symbols
 from sympy.physics.units import gram, mol, second, kelvin, joule, pascal, cm
 
-A_1, A_2, E_1, E_2, A_l, E_l, n_l, n_p, F_p, e, R, P_O2ref_p, P_O2ref_l, T_ref, t, P_O2, T, t_0 = symbols("A_1, A_2, E_1, E_2, A_l, E_l, n_l, n_p, F_p, e, R, P_O2ref_p, P_O2ref_l, T_ref, t, P_O2, T, t_0")
+#A_1, A_2, E_1, E_2, A_l, E_l, n_l, n_p, F_p, e, R, P_O2ref_p, P_O2ref_l, T_ref, t, P_O2, T, t_0 = symbols("A_1, A_2, E_1, E_2, A_l, E_l, n_l, n_p, F_p, e, R, P_O2ref_p, P_O2ref_l, T_ref, t, P_O2, T, t_0")
+from equations import *
 
 # fitted values for both regimes, from table 2-1 and 4-5. Should be independent of experiment.
 fitted_values = {
@@ -88,3 +89,7 @@ def getExperimentConds(code, **substitutions):
     for key in substitutions:
         toReturn[key] = substitutions.get(key)
     return toReturn
+
+def getMassGain(code, massCalculator=complexMassGain, **substitutions):
+    return massCalculator(getExperimentConds(code, **substitutions))
+
