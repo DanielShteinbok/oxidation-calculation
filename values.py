@@ -61,6 +61,16 @@ experiment_values = {
         T: 1173.15*kelvin
     },
 
+    "3D": {
+        P_O2: 100*pascal,
+        T: 773.15*kelvin
+    },
+
+    "3E": {
+        P_O2: 100*pascal,
+        T: 973.15*kelvin
+    },
+
     "4A": {
         P_O2: 10*pascal,
         T: 543.15*kelvin
@@ -69,7 +79,7 @@ experiment_values = {
     "4B": {
         P_O2: 10*pascal,
         T: 1173.15*kelvin,
-        t_0: 369*second
+        #t_0: 369*second
     }
 } 
 

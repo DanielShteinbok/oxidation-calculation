@@ -1,5 +1,6 @@
 #from sympy import symbols
 import sympy
+from sympy.physics.units import gram, second, cm
 
 k_p, k_l, t, t_0 = sympy.symbols("k_p, k_l, t, t_0")
 
@@ -35,3 +36,15 @@ def complexMassGain(conditions):
 
 def linearMassGain(conditions):
     return x_linear_substituted.evalf(subs=conditions)
+
+#def getMassGainTimeLambda(conditions, modules=None):
+    #"""
+    #Create a custom function lambda to be quickly executable for all time values
+    #within the specified module (e.g. for plotting many points).
+#
+    #Conditions should be a dictionary with all conditions except t.
+    #
+    #Returns:
+    #function of t
+    #"""
+    #return sympy.lambdify(t, x_substituted.subs(conditions)*cm**2*second/gram, modules)
