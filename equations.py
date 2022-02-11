@@ -37,14 +37,28 @@ def complexMassGain(conditions):
 def linearMassGain(conditions):
     return x_linear_substituted.evalf(subs=conditions)
 
-#def getMassGainTimeLambda(conditions, modules=None):
-    #"""
-    #Create a custom function lambda to be quickly executable for all time values
-    #within the specified module (e.g. for plotting many points).
-#
-    #Conditions should be a dictionary with all conditions except t.
-    #
-    #Returns:
-    #function of t
-    #"""
-    #return sympy.lambdify(t, x_substituted.subs(conditions)*cm**2*second/gram, modules)
+def getMassGainTimeLambda(conditions, modules=None):
+    """
+    Create a custom function lambda to be quickly executable for all time values
+    within the specified module (e.g. for plotting many points).
+
+    Conditions should be a dictionary with all conditions except t.
+
+    Returns:
+    f (function): function of t
+    u (Object): units in which the value calculated by f(t) would be, to be multiplied by units of t
+    """
+    conditions_values = {}
+    finalUnits = 1
+    # TODO iterate through all keys, copy the key and just the numerical component of the value, copy the units elsewhere
+    for key in conditions:
+        if type(conditions[key]) == sympy.core.mul.Mul:
+            #print(conditions[key].as_coeff_Mul())
+            content_tuple = conditions[key].as_coeff_Mul()
+            conditions_values[key] = content_tuple[0]
+            finalUnits = finalUnits*content_tuple[1]
+        else:
+            #print(conditions[key])
+            conditions_values[key] = conditions[key]
+
+    return sympy.lambdify(t, x_substituted.subs(conditions_values), modules), finalUnits.as_content_primitive()[1]
