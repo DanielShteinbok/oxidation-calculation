@@ -82,10 +82,15 @@ experiment_values = {
         P_O2: 10*pascal,
         T: 1173.15*kelvin,
         #t_0: 369*second
+    },
+
+    "IPL": {
+        P_O2: 1.33322387415 * pascal,
+        T: 1273.15 * kelvin
     }
 } 
 
-def getExperimentConds(code, **substitutions):
+def getExperimentConds(code, substitutions={}):
     """
     Get the conditions for a particular experiment.
 
@@ -97,16 +102,23 @@ def getExperimentConds(code, **substitutions):
     """
     toReturn = {**fitted_values, **experiment_constants, **(experiment_values[code])}
     if toReturn.get(t_0) == None:
-        toReturn[t_0] = 0
+        toReturn[t_0] = 350 * second
     for key in substitutions:
+        print(key)
         toReturn[key] = substitutions.get(key)
     return toReturn
 
-def getMassGain(code, massCalculator=complexMassGain, **substitutions):
-    return massCalculator(getExperimentConds(code, **substitutions))
+def getMassGain(code, massCalculator=complexMassGain, substitutions={}):
+    return massCalculator(getExperimentConds(code, substitutions))
 
-def getMassGainNumpyLambda(code, **substitutions):
-    conditions = getExperimentConds(code, **substitutions)
+def getMassGainNumpyLambda(code, substitutions={}):
+    conditions = getExperimentConds(code, substitutions)
     conditions.pop(t)
     #print(conditions)
     return getMassGainTimeLambda(conditions, modules=numpy)
+
+def getOxideThicknessNumpyLambda(code, substitutions={}):
+    conditions = getExperimentConds(code, substitutions)
+    conditions.pop(t)
+    print(conditions)
+    return getOxideThicknessTimeLambda(conditions, modules=numpy)
