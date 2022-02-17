@@ -124,5 +124,5 @@ def getMassGainNumpyLambda(code, substitutions={}):
 def getOxideThicknessNumpyLambda(code, substitutions={}):
     conditions = getExperimentConds(code, substitutions)
     conditions.pop(t)
-    print(conditions)
+    #print(conditions)
     return getOxideThicknessTimeLambda(conditions, modules=numpy)
