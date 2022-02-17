@@ -18,6 +18,13 @@ For example, the time condition can be set to 1 minute by passing a condition: `
 Many of these same objects are accessible from `values` (i.e. `values.t is equations.t` evaluates to `True`), but it is preferred to always access conditions from `equations`
 because all conditions present in the equations exist in that namespace (and may not all be in `values`)
 
+Something that may be useful down the line is the ability to generate a computationally efficient lambda for calculation of oxidation behaviour as a function of time,
+for use with a specific module e.g. `math`, `numpy` etc. These functions are respectively `getMassGainTimeLambda` and `getOxideThicknessTimeLambda`. 
+Both return a function of t and an object representing the units in which that function calculates oxidation (respectively, mass gain and oxide thickness)
+given a time. The units object that is returned contains an `equations.t` symbol which can be substituted by whatever unit you input.
+
+Generally, instead of using these two functions it may be useful to just use the wrappers provided in `values`, which specifically return lambda functions for use with numpy.
+
 ### values
 `values` stores actual values with units to assign to each variable in the equations, 
 provides a convenience function to generate the correct dictionary of conditions in the necessary format, 
@@ -88,3 +95,38 @@ There is also a possiblity to specify a different algorithm for calculating the 
 ```
 This calculates the mass gain using the linear approximation rather than the complete formula.
 
+Within `values`, there are also functions that generate computationally-efficient lambdas for use with `numpy` as a function of time.
+This is useful if you want to plot these behaviours, or to track it over time and find the time at which a certain oxidation is reached, or anything else.
+
+The functions in question are `getMassGainNumpyLambda` and `getOxideThicknessNumpyLambda`, which return a function and units object. See the docstrings for more details.
+
+### oxplotter
+This is a module for conveniently plotting oxidation. Under the hood, it uses `values.getMassGainNumpyLambda` and `values.getOxideThicknessNumpyLambda` to calculate the behaviour
+for a whole set of different points in time at once, and then plots these values. This is a lot faster than simply calling `values.getMassGain` for each time point, and abstracts away
+a lot of the details of plotting this stuff via pyplot.
+
+Usage:
+
+``` python-console
+>>> fig, unit = oxplotter.plotThicknessNumpy("IPL", stop=10*60, step=10)
+```
+to plot the oxide thickness over time from 0 to 600 seconds under conditions specified in `values.experiment_values["IPL"]` with a step size of 10 seconds (that is, calculate for 60 points).
+`fig` is the figure plotted, `unit` is the object that represents the units in which the value is returned. For instance:
+
+``` python-console
+>>> print(unit)
+nanometer
+```
+
+Plotting mass gain is similar.
+
+
+## Getting Help with this library
+Hopefully, each function has a docstring. In IPython, run:
+
+``` python-console
+<function name>?
+```
+to get the docstring printed out. This should have all information on what parameters to pass and what is returned.
+
+`
