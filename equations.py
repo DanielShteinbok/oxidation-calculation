@@ -42,11 +42,16 @@ def getMassGainTimeLambda(conditions, modules=None):
     Create a custom function lambda to be quickly executable for all time values
     within the specified module (e.g. for plotting many points).
 
-    Conditions should be a dictionary with all conditions except t.
+    Parameters:
+    conditions (dict): a dictionary with all conditions except t.
+    modules (str): the module for which to generate the lambda. In all my uses, I set modules="numpy"
 
     Returns:
-    f (function): function of t
-    u (Object): units in which the value calculated by f(t) would be, to be multiplied by units of t
+    f (function): function with signature f(t) -> float, where f(t) returns the mass gain after a time t
+    u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
+        calling e.g. `u.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))`
+        (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
+        gives the units in which f(t) would return the mass gain.
     """
     conditions_values = {}
     conditions_units = {}
@@ -71,6 +76,17 @@ def getOxideThicknessTimeLambda(conditions, modules=None):
     Atomic mass of oxygen is 15.999 g/mol
     Molar mass of Cu2O is 143.09 g/mol.
     Therefore, thickness = mass gain/area / 15.999 * 143.09 / 6
+
+    Parameters:
+    conditions (dict): a dictionary with all conditions except t.
+    modules (str): the module for which to generate the lambda. In all my uses, I set modules="numpy"
+
+    Returns:
+    f (function): function with signature f(t) -> float, where f(t) returns the oxide thickness after a time t
+    u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
+        calling e.g. `u.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))`
+        (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
+        gives the units in which f(t) would return the oxide thickness.
     """
     conditions_values = {}
     conditions_units = {}
