@@ -127,8 +127,8 @@ def getMassGainNumpyLambda(code, substitutions={}):
 
     Returns:
     f (function): function with signature f(t) -> float, where f(t) returns the mass gain after a time t
-    unit (sympy.Expr): the units in which f returns its answer, with equations.t inside.
-        calling e.g. `unit.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))`
+    u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
+        calling e.g. sympy.simplify(u.subs(equations.t,second))
         (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
         gives the units in which f(t) would return the mass gain.
     """
@@ -138,6 +138,23 @@ def getMassGainNumpyLambda(code, substitutions={}):
     return getMassGainTimeLambda(conditions, modules=numpy)
 
 def getOxideThicknessNumpyLambda(code, substitutions={}):
+    """
+    Get the lambda function for use with numpy that calculates oxide thickness as a function of time.
+    Rather than taking a dictionary of conditions, take a code and a dictionary of substitutions.
+
+    Parameters:
+    code (String): the alpha-numeric code representing the trial in question (e.g. 1A, 2B)
+    substitutions (dict): an optional dictionary of properties to change from the given code-addressed setup.
+        the key is a symbol object from `equations`, e.g. equations.T, and the value is the new value with units from sympy.physics.units
+
+    Returns:
+    f (function): function with signature f(t) -> float, where f(t) returns the oxide thickness after a time t
+    u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
+        calling e.g. sympy.simplify(u.subs(equations.t,second))
+        (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
+        gives the units in which f(t) would return the oxide thickness.
+    """
+
     conditions = getExperimentConds(code, substitutions)
     conditions.pop(t)
     #print(conditions)

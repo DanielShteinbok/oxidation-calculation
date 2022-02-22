@@ -17,7 +17,7 @@ def plotMassGainNumpy(code, substitutions={}):
     plt.title("Pressure: " + str(conditions[equations.P_O2]/pascal) + ", Temperature: " + str(conditions[equations.T]/kelvin))
     #plt.show()
     #TODO return the figure and the units
-    return fig, sympy.simplify(units_expression.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))
+    return fig, sympy.simplify(units_expression.subs(equations.t,second))
 
 def plotThicknessNumpy(code, start=0, stop=28800, step=1000, substitutions={}):
     times = numpy.arange(start, stop, step)
@@ -31,4 +31,5 @@ def plotThicknessNumpy(code, start=0, stop=28800, step=1000, substitutions={}):
     axes.set_xlabel("Time, seconds")
     #plt.show()
     #TODO return the figure and the units
-    return fig, sympy.simplify(units_expression.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))
+    return fig, sympy.simplify(units_expression.subs(equations.t,second))
+    #return fig, sympy.simplify(units_expression.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))

@@ -35,6 +35,9 @@ def complexMassGain(conditions):
     return x_substituted.evalf(subs=conditions)
 
 def linearMassGain(conditions):
+    """
+    calculates the mass gain in the given conditions, but uses the linear approximation instead of the whole formula
+    """
     return x_linear_substituted.evalf(subs=conditions)
 
 def getMassGainTimeLambda(conditions, modules=None):
@@ -49,7 +52,7 @@ def getMassGainTimeLambda(conditions, modules=None):
     Returns:
     f (function): function with signature f(t) -> float, where f(t) returns the mass gain after a time t
     u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
-        calling e.g. `u.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))`
+        calling e.g. sympy.simplify(u.subs(equations.t,second))
         (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
         gives the units in which f(t) would return the mass gain.
     """
@@ -65,8 +68,9 @@ def getMassGainTimeLambda(conditions, modules=None):
         else:
             #print(conditions[key])
             conditions_values[key] = conditions[key]
+            conditions_units[key] = 1
 
-    return sympy.lambdify(t, x_substituted.subs(conditions_values), modules), x_substituted.subs(conditions_units)
+    return sympy.lambdify(t, x_substituted.subs(conditions_values), modules), x_substituted.subs(conditions_units)/(-1 + sympy.sqrt(5))
 
 def getOxideThicknessTimeLambda(conditions, modules=None):
     """
@@ -84,7 +88,7 @@ def getOxideThicknessTimeLambda(conditions, modules=None):
     Returns:
     f (function): function with signature f(t) -> float, where f(t) returns the oxide thickness after a time t
     u (sympy.Expr): the units in which f returns its answer, with equations.t inside.
-        calling e.g. `u.subs([(equations.t,second), (equations.e, 1), (equations.F_p, 1)])).as_coeff_Mul()[1]/(-1 + sympy.sqrt(5))`
+        calling e.g. sympy.simplify(u.subs(equations.t,second))
         (assuming that the value of t should be in seconds; otherwise use whatever unit is applicable)
         gives the units in which f(t) would return the oxide thickness.
     """
@@ -101,7 +105,8 @@ def getOxideThicknessTimeLambda(conditions, modules=None):
         else:
             #print(conditions[key])
             conditions_values[key] = conditions[key]
+            conditions_units[key] = 1
 
     thickness_function = x_substituted.subs(conditions_values)  / 15.999 * 143.09 / 6 * 1e7
-    thickness_units = x_substituted.subs(conditions_units) * cm**2/gram * nm
+    thickness_units = x_substituted.subs(conditions_units) * cm**2/gram * nm / (-1 + sympy.sqrt(5))
     return sympy.lambdify(t, thickness_function, modules), thickness_units
